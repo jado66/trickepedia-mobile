@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "expo:token": "bash scripts/load-expo-token.sh",
     "expo:token:export": "node scripts/print-expo-token-export.mjs",
-    "expo:whoami": "bash -c 'eval \"$(node scripts/print-expo-token-export.mjs --quiet)\" && eas whoami'"
+    "expo:whoami": "bash -c 'eval \"$(node scripts/print-expo-token-export.mjs --quiet)\" && eas whoami'",
+    "eas": "bash scripts/eas-with-token.sh"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
