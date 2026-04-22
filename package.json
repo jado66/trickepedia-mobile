@@ -10,7 +10,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "expo:token": "bash scripts/load-expo-token.sh",
+    "expo:token:export": "node scripts/print-expo-token-export.mjs"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
