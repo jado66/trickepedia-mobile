@@ -11,6 +11,10 @@
 #
 # One-shot verify (subshell):
 #   bash scripts/load-expo-token.sh
+#
+# Or run eas with token loaded without touching your shell env:
+#   npm run eas -- whoami
+#   npm run eas -- build --profile production --platform android
 
 set -euo pipefail
 
