@@ -4,6 +4,9 @@ React Native (Expo SDK 54, TypeScript) companion app for
 [Trickepedia](https://trickipedia.app). Shares the same Supabase backend as
 the web app.
 
+**Native application IDs:** `com.jado66.trickipedia` (iOS bundle identifier and
+Android package name), aligned with the existing Play Store listing.
+
 ## Stack
 
 - **Expo** (SDK 54) with the new architecture + React Compiler enabled

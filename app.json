@@ -10,13 +10,13 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.trickepedia.mobile",
+      "bundleIdentifier": "com.jado66.trickipedia",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
-      "package": "com.trickepedia.mobile",
+      "package": "com.jado66.trickipedia",
       "adaptiveIcon": {
         "backgroundColor": "#0a0a0a",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
