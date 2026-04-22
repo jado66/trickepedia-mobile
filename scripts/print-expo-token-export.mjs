@@ -1,11 +1,21 @@
 /**
- * Reads EXPO_TOKEN from .env.local and prints a shell-safe `export` line.
- * Usage (bash or zsh):
+ * Reads EXPO_TOKEN from .env.local and prints a shell-safe `export` line on stdout.
+ *
+ * Load into your **current** zsh/bash session (required — printing alone does nothing):
  *   eval "$(node scripts/print-expo-token-export.mjs)"
+ *
+ * One-shot verify without touching your shell:
+ *   npm run expo:whoami
+ *
+ * CI / scripts (stdout only, no hint on stderr):
+ *   node scripts/print-expo-token-export.mjs --quiet
  */
 import fs from "node:fs";
 import path from "node:path";
+import process from "node:process";
 import { fileURLToPath } from "node:url";
+
+const quiet = process.argv.includes("--quiet");
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const envPath = path.join(root, ".env.local");
@@ -36,5 +46,14 @@ if (!value) {
   process.exit(1);
 }
 
-// JSON.stringify so eval is safe even if token contains quotes or $
+if (!quiet) {
+  process.stderr.write(
+    "Expo: printing export line on stdout.\n" +
+      "To set EXPO_TOKEN in this shell, run:\n" +
+      '  eval "$(node scripts/print-expo-token-export.mjs --quiet)"\n' +
+      "Or verify in one shot:\n" +
+      "  npm run expo:whoami\n\n",
+  );
+}
+
 process.stdout.write(`export EXPO_TOKEN=${JSON.stringify(value)}\n`);

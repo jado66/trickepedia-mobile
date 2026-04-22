@@ -4,8 +4,10 @@
 # From bash:
 #   source scripts/load-expo-token.sh
 #
-# From zsh, use the Node helper instead (works in bash too):
-#   eval "$(node scripts/print-expo-token-export.mjs)"
+# From zsh (or bash), load into the **current** shell:
+#   eval "$(node scripts/print-expo-token-export.mjs --quiet)"
+#
+# Printing the export line alone does not set env vars — you must eval it.
 #
 # One-shot verify (subshell):
 #   bash scripts/load-expo-token.sh
