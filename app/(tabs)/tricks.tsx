@@ -2,7 +2,8 @@ import React from "react";
 import { ActivityIndicator, FlatList, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "../lib/supabase";
+
+import { supabase } from "@/src/lib/supabase";
 
 type TrickRow = {
   id: string;
@@ -12,7 +13,6 @@ type TrickRow = {
 };
 
 async function fetchTricks(): Promise<TrickRow[]> {
-  // Adjust the table/columns to match your Trickepedia schema.
   const { data, error } = await supabase
     .from("tricks")
     .select("id, name, slug, difficulty_level")
@@ -22,7 +22,7 @@ async function fetchTricks(): Promise<TrickRow[]> {
   return data ?? [];
 }
 
-export function TricksScreen() {
+export default function TricksScreen() {
   const { data, isLoading, error, refetch, isRefetching } = useQuery({
     queryKey: ["tricks"],
     queryFn: fetchTricks,

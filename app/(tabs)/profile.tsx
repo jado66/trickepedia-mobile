@@ -1,9 +1,10 @@
 import React from "react";
 import { Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthStore } from "../store/auth-store";
 
-export function ProfileScreen() {
+import { useAuthStore } from "@/src/store/auth-store";
+
+export default function ProfileScreen() {
   const { user, signOut } = useAuthStore();
 
   return (

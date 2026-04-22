@@ -1,9 +1,10 @@
 import React from "react";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useAuthStore } from "../store/auth-store";
 
-export function HomeScreen() {
+import { useAuthStore } from "@/src/store/auth-store";
+
+export default function HomeScreen() {
   const user = useAuthStore((s) => s.user);
 
   return (

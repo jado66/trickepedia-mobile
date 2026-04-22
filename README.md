@@ -1,13 +1,14 @@
 # Trickepedia Mobile
 
 React Native (Expo SDK 54, TypeScript) companion app for
-[Trickepedia](../trickepedia). Shares the same Supabase backend as the web app.
+[Trickepedia](https://trickipedia.app). Shares the same Supabase backend as
+the web app.
 
 ## Stack
 
-- **Expo** (SDK 54) with the new architecture enabled
+- **Expo** (SDK 54) with the new architecture + React Compiler enabled
+- **Expo Router** (file-based routing with typed routes)
 - **TypeScript** (strict)
-- **React Navigation** (native stack + bottom tabs)
 - **Supabase JS** with `AsyncStorage`-backed session persistence
 - **TanStack Query** for server state
 - **Zustand** for client state (auth)
@@ -16,71 +17,112 @@ React Native (Expo SDK 54, TypeScript) companion app for
 ## Project layout
 
 ```
-App.tsx                 # Root component, wires providers + navigator
-index.ts                # Expo entry (registers root component)
-app.json                # Expo config
-babel.config.js         # babel-preset-expo + nativewind
-metro.config.js         # withNativeWind wrapper
-tailwind.config.js      # NativeWind preset + theme
-global.css              # Tailwind directives (imported by App.tsx)
-src/
+app/                            # Expo Router file-based routes
+  _layout.tsx                   # Root Stack, wraps auth gate + providers
+  sign-in.tsx                   # Signed-out route
+  (tabs)/
+    _layout.tsx                 # Bottom tab navigator
+    index.tsx                   # Home
+    tricks.tsx                  # Example TanStack Query + Supabase fetch
+    profile.tsx                 # Account + sign out
+
+src/                            # Non-route code
   lib/
-    supabase.ts         # Supabase client (AsyncStorage session)
-    query-client.ts     # TanStack Query client
+    supabase.ts                 # Supabase client (AsyncStorage session)
+    query-client.ts             # TanStack Query client
   providers/
-    AppProviders.tsx    # Query + SafeArea + GestureHandler providers
+    AppProviders.tsx            # Query + SafeArea + GestureHandler
   store/
-    auth-store.ts       # Zustand auth store (init, session, signOut)
-  navigation/
-    RootNavigator.tsx   # Auth-gated stack (SignIn vs AppTabs)
-    AppTabs.tsx         # Bottom tab navigator
-  screens/
-    SignInScreen.tsx
-    HomeScreen.tsx
-    TricksScreen.tsx    # Example TanStack Query + Supabase fetch
-    ProfileScreen.tsx
+    auth-store.ts               # Zustand auth store
+
+components/                     # Re-usable UI (themed text/view, icons)
+constants/                      # Colors + theme
+hooks/                          # useColorScheme, etc.
+
+tailwind.config.js              # NativeWind preset + brand color
+global.css                      # Tailwind directives (imported in _layout)
+babel.config.js                 # babel-preset-expo + nativewind + worklets
+metro.config.js                 # withNativeWind wrapper
+eas.json                        # EAS Build profiles
+```
+
+Auth gating is done with expo-router's `Stack.Protected`:
+
+```12:37:app/_layout.tsx
+function RootStack() {
+  const { session, initializing, init } = useAuthStore();
+
+  useEffect(() => {
+    void init();
+  }, [init]);
+
+  if (initializing) {
+    return (
+      <View className="flex-1 items-center justify-center bg-neutral-950">
+        <ActivityIndicator color="#f97316" />
+      </View>
+    );
+  }
+
+  return (
+    <Stack>
+      <Stack.Protected guard={!!session}>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      </Stack.Protected>
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+      </Stack.Protected>
+    </Stack>
+  );
+}
 ```
 
 ## Getting started
 
-1. Install deps:
+```bash
+npm install
+cp .env.local .env                 # or set EXPO_PUBLIC_* vars directly in .env.local
+npm run ios                         # iOS simulator (requires Xcode)
+npm run android                     # Android emulator (requires Android Studio)
+npm run start                       # Metro + Expo Go on a physical device
+```
 
-   ```bash
-   npm install
-   ```
+Required env vars (either `.env` or `.env.local`, both are gitignored):
 
-2. Copy env and fill in values (use the same Supabase project as the web app):
+```
+EXPO_PUBLIC_SUPABASE_URL=...
+EXPO_PUBLIC_SUPABASE_ANON_KEY=...
+EXPO_PUBLIC_SITE_URL=...            # optional, for deep-link share fallbacks
+EXPO_TOKEN=...                      # optional, for eas/expo CLI auth (local-only)
+```
 
-   ```bash
-   cp .env.example .env
-   ```
+## Scripts
 
-3. Run the app:
+- `npm run start` — Metro + Expo Dev Server
+- `npm run ios` / `npm run android` / `npm run web`
+- `npm run lint` — `expo lint`
+- `npm run typecheck` — `tsc --noEmit`
+- `npm run reset-project` — starter-template reset helper
 
-   ```bash
-   npm run ios      # iOS simulator (requires Xcode)
-   npm run android  # Android emulator (requires Android Studio)
-   npm run start    # Metro + Expo Go on a physical device
-   ```
+## Deploying
+
+Use [EAS Build](https://docs.expo.dev/build/introduction/):
+
+```bash
+eas build:configure           # one-time, creates eas.json
+eas build --platform ios
+eas build --platform android
+```
+
+For CLI auth, prefer a Personal Access Token exported as `EXPO_TOKEN` instead
+of `eas login` (more reliable, and bypasses special characters in passwords).
 
 ## Notes
 
 - `EXPO_PUBLIC_*` env vars are inlined into the JS bundle at build time. Never
   put service-role keys or other secrets there.
-- The `tricks` query in `src/screens/TricksScreen.tsx` is a placeholder —
-  adjust the columns to match your schema.
-- Native iOS/Android folders are intentionally gitignored. Use
-  `npx expo prebuild` locally if you need to eject, or rely on EAS Build.
-
-## Deploying
-
-Use [EAS Build](https://docs.expo.dev/build/introduction/) for App Store /
-Play Store builds:
-
-```bash
-npm i -g eas-cli
-eas login
-eas build:configure
-eas build --platform ios
-eas build --platform android
-```
+- The `tricks` query in `app/(tabs)/tricks.tsx` is a placeholder — adjust the
+  columns to match your schema.
+- Native iOS/Android folders are intentionally gitignored; use EAS Build for
+  store-ready binaries.
+- The `legacy-nav` branch preserves the original React Navigation scaffold.

@@ -9,11 +9,12 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { supabase } from "../lib/supabase";
+
+import { supabase } from "@/src/lib/supabase";
 
 type Mode = "signIn" | "signUp";
 
-export function SignInScreen() {
+export default function SignInScreen() {
   const [mode, setMode] = useState<Mode>("signIn");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
