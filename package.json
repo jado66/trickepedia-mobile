@@ -14,7 +14,9 @@
     "expo:token": "bash scripts/load-expo-token.sh",
     "expo:token:export": "node scripts/print-expo-token-export.mjs",
     "expo:whoami": "bash -c 'eval \"$(node scripts/print-expo-token-export.mjs --quiet)\" && eas whoami'",
-    "eas": "bash scripts/eas-with-token.sh"
+    "eas": "bash scripts/eas-with-token.sh",
+    "submit:android": "bash scripts/eas-with-token.sh submit --platform android --latest",
+    "submit:ios": "bash scripts/eas-with-token.sh submit --platform ios --latest"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
