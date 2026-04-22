@@ -21,28 +21,10 @@
       },
       "android": {
         "buildType": "apk"
-      },
-      "cache": {
-        "key": "v1",
-        "paths": [
-          "node_modules/**/*",
-          "ios/Pods/**/*",
-          "~/.gradle/caches/**/*",
-          "~/Library/Caches/CocoaPods/**/*"
-        ]
       }
     },
     "production": {
-      "autoIncrement": true,
-      "cache": {
-        "key": "v1",
-        "paths": [
-          "node_modules/**/*",
-          "ios/Pods/**/*",
-          "~/.gradle/caches/**/*",
-          "~/Library/Caches/CocoaPods/**/*"
-        ]
-      }
+      "autoIncrement": true
     }
   },
   "submit": {
