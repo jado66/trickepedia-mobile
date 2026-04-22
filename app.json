@@ -15,7 +15,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.trickepedia.mobile"
+      "bundleIdentifier": "com.trickepedia.mobile",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.trickepedia.mobile",
@@ -31,6 +34,11 @@
     },
     "plugins": [
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "4ca06868-239c-4d28-a99e-cc66778ee561"
+      }
+    }
   }
 }
